@@ -1,0 +1,69 @@
+<HTML>
+
+    <style>
+        table, th, td {
+        border: 1px solid black;
+        }
+        th {
+        text-align: left;
+        }
+        </style>
+
+    <BODY bgcolor="white">
+    <form method="POST" action="/">
+        <center>
+  
+        <img src="style/view_characters.png" alt="View Characters" width="300" height="90"><br>
+
+        <table>
+            <th>FirstName</th>
+            <th>Race</th>
+            <th>Class</th>          
+            <th>Alignment</th>
+            <th>Level</th>
+            <th>Strength</th>
+            <th>Brawn</th>
+            <th>Agility</th>
+            <th>Mettle</th>
+            <th>Craft</th>
+            <th>Insight</th>
+            <th>Wits</th>
+            <th>Reolve</th>
+            <th>Life</th>
+            <th>Armour</th>
+            <th>Shield</th>
+            <th>Helm</th>
+            </tr> <br>
+        {% for item in data %}
+            <tr>
+            <td>{{item[0]}}</td>
+            <td>{{item[1]}}</td>
+            <td>{{item[2]}}</td>
+            <td>{{item[3]}}</td>
+            <td>{{item[4]}}</td>
+            <td>{{item[5]}}</td>
+            <td>{{item[6]}}</td>
+            <td>{{item[7]}}</td>
+            <td>{{item[8]}}</td>
+            <td>{{item[9]}}</td>
+            <td>{{item[10]}}</td>
+            <td>{{item[11]}}</td>
+            <td>{{item[12]}}</td>
+            <td>{{item[13]}}</td>
+            <td>{{item[14]}}</td>
+            <td>{{item[15]}}</td>
+            <td>{{item[16]}}</td>
+            
+            </tr> <br>
+        {% endfor %}
+        </table>
+
+        <br>
+
+        <input type = "submit" name="exit" value="Back">
+        
+
+		</center>
+    </form>
+    </BODY>
+    </HTML>
