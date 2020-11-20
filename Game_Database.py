@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request
 import mysql.connector
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
 
 #connecting to local database. This is obvs terrible security. ( discussed as part of lead in to U7)
 #vetdb = mysql.connector.connect(user='Vets', password='Vets123456',
@@ -27,6 +27,7 @@ def index():
     else:
         return render_template('/index.html')
 
+########################################################################################################################################################################################################
 
 #Code runs if adding a new owner (submit pressed on owner.html page)
 @app.route('/owner', methods=['GET', 'POST'])
