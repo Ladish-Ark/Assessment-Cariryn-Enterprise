@@ -14,7 +14,7 @@ def index():
     if "viewcharacter" in request.form:
         return render_template('/view_char.html', data=viewchar())
     elif "viewitems" in request.form:
-        return render_template('/view_item.html')
+        return render_template('/view_item_charpick.html')
     elif "viewencounters" in request.form:
         return render_template('/.html')
     elif "characteroptions" in request.form:
@@ -26,9 +26,7 @@ def index():
     else:
         return render_template('/index.html')
 
-########################################################################################################################################################################################################
 
-#Code runs if adding a new owner (submit pressed on owner.html page)
 @app.route('/character_edit', methods=['GET', 'POST'])
 def character():  
   if "submit" in request.form:
@@ -48,26 +46,18 @@ def character():
         pass
   return render_template('/index.html')
 
-@app.route('/petadd', methods=['GET', 'POST'])
-def petadd():
-  #Takes details from form and crafts a sql statement  
-  if "submit" in request.form:
-        details = request.form
-        ownerID = getpersonID(details['owner'])
-        int_ownerID = ownerID[0]
-        int_ownerID = int(int_ownerID[0])
-        PetName = details['PetName']
-        PetType = details['PetType']
-        PetAge = details['PetAge']
-        #OwnerID = details['OwnerID']
-        cur = vetdb.cursor()
-        cur.execute("INSERT INTO pets(PetName, PetType, PetAge, OwnerID) VALUES (%s, %s,%s, %s)", (PetName, PetType, PetAge, int_ownerID))
-        vetdb.commit()
-        cur.close()
-          
-  elif "cancel" in request.form:
+@app.route('/view_item_charpick.html', methods=['GET','POST'])
+def item_charpick():
+    if "Select" in request.form:
+        return render_template('/view_item.html')
+    elif "Back" in request.form:
         pass
-  return render_template('/index.html')
+    return render_template('/index.html')
+
+#@app.route('/view_item.html', methods=['GET','POST'])
+#def item_view():
+    #if "Back" in request.form:
+        #return render_template('/index.html')
 
 def viewchar():
     cur = gamedb.cursor()

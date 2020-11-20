@@ -1,0 +1,41 @@
+<HTML>
+
+    <style>
+        table, th, td {
+        border: 1px solid black;
+        }
+        th {
+        text-align: left;
+        }
+        </style>
+
+    <BODY bgcolor="white">
+    <form method="POST" action="/">
+        <center>
+  
+        <img src="static/style/item.png" alt="Item" width="300" height="90"><br><br>
+
+        <table>
+            <th>Item Name</th>
+            <th>Cost</th>
+            <th>Load</th>
+            </tr> <br>
+        {% for item in data %}
+            <tr>
+            <td>{{item[0]}}</td>
+            <td>{{item[1]}}</td>
+            <td>{{item[2]}}</td>
+            
+            </tr> <br>
+        {% endfor %}
+        </table>
+
+        <br>
+
+        <input type = "submit" name="Back" value="Back">
+        
+
+		</center>
+    </form>
+    </BODY>
+    </HTML>
