@@ -14,7 +14,7 @@ def index():
     if "viewcharacter" in request.form:
         return render_template('/view_char.html', data=viewchar())
     elif "viewitems" in request.form:
-        return render_template('/view_item_charpick.html')
+        return render_template('/view_item_charpick.html', data=view_char_items())
     elif "viewencounters" in request.form:
         return render_template('/.html')
     elif "characteroptions" in request.form:
@@ -38,7 +38,7 @@ def character():
           Phone = details['Phone']
           cur = gamedb.cursor()
           # Need to finish line 
-          #cur.execute("INSERT INTO player_characters(first_name, last_name, raceID_FK1, classID_FK1, alignmentID_FK1, level, strength, brawn, agility, mettle, craft, insight, wits, resolve, life, armourID_FK1, protectionID_FK1) VALUES (%s, %s, %s, %s, %s %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,)", (Surname, FirstName, Address, Address2,Phone))
+          # cur.execute("INSERT INTO player_characters(first_name, last_name, raceID_FK1, classID_FK1, alignmentID_FK1, level, strength, brawn, agility, mettle, craft, insight, wits, resolve, life, armourID_FK1, protectionID_FK1) VALUES (%s, %s, %s, %s, %s %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,)", (Surname, FirstName, Address, Address2,Phone))
           gamedb.commit()
           cur.close()
           
@@ -49,15 +49,21 @@ def character():
 @app.route('/view_item_charpick.html', methods=['GET','POST'])
 def item_charpick():
     if "Select" in request.form:
-        return render_template('/view_item.html')
+        return render_template('/view_item.html', data=view_items())
     elif "Back" in request.form:
         pass
     return render_template('/index.html')
 
-#@app.route('/view_item.html', methods=['GET','POST'])
-#def item_view():
-    #if "Back" in request.form:
-        #return render_template('/index.html')
+def view_char_items():
+    cur = gamedb.cursor()
+    cur.execute("SELECT first_name, last_name FROM player_characters")
+    data = cur.fetchall()
+    return data
+
+def view_items():
+    cur = gamedb.cursor()
+    cur.execute("SELECT itemID_FK2 FROM inventory")
+
 
 def viewchar():
     cur = gamedb.cursor()

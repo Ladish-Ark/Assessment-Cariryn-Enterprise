@@ -14,14 +14,14 @@
         
         <img src="static/style/item.png" alt="Item" width="300" height="90"><br><br>
 
-        <label for="Character">Select Character:</label>
-        <select id="Character" name="Character">
+        <label for="character">Select Your Character:</label>
+        <select id="character" name="character">
             {% for item in data %}
             <option value="{{ item[0] }} {{item[1]}}">{{item[0]}} {{item[1]}}</option>
             {% endfor %}
         </select><br><br>
 
-        <input type = "submit" name="Select" value="Confirm"><br><br><br>
+        <input type = "submit", onclick=click() name="Select" value="Confirm"><br><br><br>
         <input type = "submit" name="Back" value="Back">
 
 		</center>
