@@ -46,28 +46,38 @@ def character():
         pass
   return render_template('/index.html')
 
-@app.route('/view_item_charpick.html', methods=['GET','POST'])
+@app.route('/view_item_charpick.html', methods=['GET', 'POST'])
 def item_charpick():
     if "Select" in request.form:
         details = request.form
-        character = get_char_name(details['character'])
-        print(character)
+        Character_Details = details['character']
+        Character_Details = Character_Details.split(" ")
+        CharacterFirstName = Character_Details[0]
+        CharacterSecondName = Character_Details[1]
+        character = get_char_name(CharacterFirstName, CharacterSecondName)
+        #character2 = get_char_name(CharacterSecondName)
+        print(CharacterFirstName)
+        print(CharacterSecondName)
         int_nameID = character[0]
-        int_nameID = int(character[0])
-        return render_template('/view_item.html', data=get_char_name(character))
+        int_nameID = str(int_nameID[0])
+        return render_template('/view_item.html', data=get_char_name(CharacterFirstName, CharacterSecondName))
     elif "Back" in request.form:
         pass
     return render_template('/index.html')
 
 def view_char_items():
     cur = gamedb.cursor()
-    cur.execute("SELECT first_name, last_name FROM player_characters")
+    cur.execute('SELECT CONCAT(first_name," ",last_name) FROM player_characters')
     data = cur.fetchall()
-    return data 
+    return data
 
-def get_char_name(name):
+def get_char_name(first_num, second_num):
+    details = request.form
     cur = gamedb.cursor()
-    check = ("SELECT player_ID FROM player_characters where player_characters.first_name='" + name + "'")
+    check = ("SELECT playerID FROM player_characters where player_characters.first_name='" + first_num + "' and player_characters.last_name='" + second_num +"'")
+    print(check)
+    #playerid = check(details['playerID'])
+    #print(playerid)
     #query = ("SELECT itemID_FK2 FROM inventory where inventory.playerID_FK1='" + name + "'")# nameinventory.playerID_FK1=player_characters.playerID'" + name + "'")
     cur.execute(check)
     data = cur.fetchall()
