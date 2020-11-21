@@ -49,7 +49,12 @@ def character():
 @app.route('/view_item_charpick.html', methods=['GET','POST'])
 def item_charpick():
     if "Select" in request.form:
-        return render_template('/view_item.html', data=view_items())
+        details = request.form
+        character = get_char_name(details['character'])
+        print(character)
+        int_nameID = character[0]
+        int_nameID = int(character[0])
+        return render_template('/view_item.html', data=get_char_name(character))
     elif "Back" in request.form:
         pass
     return render_template('/index.html')
@@ -57,6 +62,14 @@ def item_charpick():
 def view_char_items():
     cur = gamedb.cursor()
     cur.execute("SELECT first_name, last_name FROM player_characters")
+    data = cur.fetchall()
+    return data 
+
+def get_char_name(name):
+    cur = gamedb.cursor()
+    check = ("SELECT player_ID FROM player_characters where player_characters.first_name='" + name + "'")
+    #query = ("SELECT itemID_FK2 FROM inventory where inventory.playerID_FK1='" + name + "'")# nameinventory.playerID_FK1=player_characters.playerID'" + name + "'")
+    cur.execute(check)
     data = cur.fetchall()
     return data
 
