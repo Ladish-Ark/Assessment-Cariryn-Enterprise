@@ -1,2 +1,12 @@
 # Assessment-Cariryn-Enterprise
-A Database used to store information about a game and characters stats and items.
+
+**__By Callum Baldwin__**
+
+Start Date: 13th October 2020
+End Date: 18th December 2020
+
+A database made for my Unit 18 (Relational Database Development) Assignment.
+
+**__Info__**
+
+This Database used to store information about a games, characters stats and items.
