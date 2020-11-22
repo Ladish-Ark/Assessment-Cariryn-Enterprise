@@ -31,12 +31,26 @@ def index():
 @app.route('/character_edit', methods=['GET', 'POST'])
 def character():  
   if "submit" in request.form:
-          details = request.form
-          Surname = details['Surname']
-          FirstName = details['FirstName']
-          Address = details['Address']
-          Address2 = details['Address2']
-          Phone = details['Phone']
+      details = request.form
+      FirstName = details['FirstName']
+      Surname = details['Surname']
+      Age = details['Age']
+
+      ### Get details from drop down boxes
+
+
+      Level = details['Level']
+      Strength = details['Strength']
+      Brawn = details['Brawn']
+      Agility = details['Agility']
+      Mettle = details['Mettle']
+      Craft = details['Craft']
+      Insight = details['Insight']
+      Wits = details['Wits']
+      Resolve = details['Resolve']
+      Life = details['Life']
+
+
           #cur = gamedb.cursor()
           # Need to finish line 
           # cur.execute("INSERT INTO player_characters(first_name, last_name, raceID_FK1, classID_FK1, alignmentID_FK1, level, strength, brawn, agility, mettle, craft, insight, wits, resolve, life, armourID_FK1, protectionID_FK1) VALUES (%s, %s, %s, %s, %s %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,)", (Surname, FirstName, Address, Address2,Phone))
