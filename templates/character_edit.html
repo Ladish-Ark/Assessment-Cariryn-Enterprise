@@ -5,16 +5,63 @@
         
         <img src="static/style/add_character.png" alt="Character Details" width="300" height="90"><br>
 
-        Name <input type = "text" name= "Name: " /> <br>
-        Race <input type = "text" name= "Race: " /> <br>
-        Class <input type = "text" name= "Class: " /> <br>
-        Age <input type = "text" name = "Age: " /> <br>
-        Shield <input type = "text" name = Shield /><br>
-        Helm <input type = "text" name = "Helm" /><br>
+        <H1>Main Details</H1>
+
+        First Name: <input type = "text" name= "FirstName" /> <br>
+        Surname: <input type = "text" name= "Surname" /> <br>
+        Age: <input type = "number" name = "Age" min="1" /> <br>
+        
+        <label for="race_pick">Select Your Race:</label>
+        <select id="race_pick" name="race_pick">
+            {% for item in data %}
+            <option value="{{ item[0] }}">{{item[0]}}</option>
+            {% endfor %}
+        </select><br>
+
+        <label for="class_pick">Select Your Class:</label>
+        <select id="class_pick" name="class_pick">
+            {% for item in data1 %}
+            <option value="{{ item[0] }}">{{item[0]}}</option>
+            {% endfor %}
+        </select><br>
+
+        <label for="alignment_pick">Select Your Alignment:</label>
+        <select id="alignment_pick" name="alignment_pick">
+            {% for item in data2 %}
+            <option value="{{ item[0] }}">{{item[0]}}</option>
+            {% endfor %}
+        </select><br>
+
+        <label for="armour_pick">Select Your Armour:</label>
+        <select id="armour_pick" name="armour_pick">
+            {% for item in data3 %}
+            <option value="{{ item[0] }}">{{item[0]}}</option>
+            {% endfor %}
+        </select><br>
+
+        <label for="protection_pick">Select Your Protection:</label>
+        <select id="protection_pick" name="protection_pick">
+            {% for item in data4 %}
+            <option value="{{ item[0] }}">{{item[0]}}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <H1>Stats</H1>
+
+        Level: <input type = "number" name = "Level" min="0" /> <br>
+        Strength: <input type = "number" name = "Strength" min="0" /> <br>
+        Brawn: <input type = "number" name = "Brawn" min="0" /> <br>
+        Agility: <input type = "number" name = "Agility" min="0" /> <br>
+        Mettle: <input type = "number" name = "Mettle" min="0" /> <br>
+        Craft: <input type = "number" name = "Craft" min="0" /> <br>
+        Insight <input type = "number" name = "Insight" min="0" /> <br>
+        Wits: <input type = "number" name = "Wits" min="0" /> <br>
+        Resolve: <input type = "number" name = "Resolve" min="0" /> <br>
+        Life: <input type = "number" name = "Life" min="0" /> <br>
         
         </br>
         
-        <input type = "submit" name="submit" value="Add Character">
+        <input type = "submit" name="submit" value="Add Character"><br>
         <input type = "submit" name="cancel" value="Cancel">
         
         
