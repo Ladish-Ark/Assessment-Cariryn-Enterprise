@@ -99,7 +99,7 @@ def get_char_name(first_num, second_num):
 
     temp = re.sub(r'[\[\]\(\), ]', '', str(code))
     print(temp)
-    get_items = ("SELECT name, cost, item_load FROM items, inventory WHERE inventory.playerID_FK1='" + temp + "' and inventory.itemID_FK2=items.itemID") 
+    get_items = ("SELECT name, cost, item_load FROM inventory, items WHERE inventory.playerID_FK1='" + temp + "' and inventory.itemID_FK2=items.itemID") 
     cur.execute(get_items)
     data = cur.fetchall()
     return data
