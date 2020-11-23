@@ -73,8 +73,11 @@ def item_charpick():
         #character2 = get_char_name(CharacterSecondName)
         print(CharacterFirstName)
         print(CharacterSecondName)
-        int_nameID = character[0]
-        int_nameID = str(int_nameID[0])
+        try:
+            int_nameID = character[0]
+            int_nameID = str(int_nameID[0])
+        except IndexError:
+            print("No Data For Selected Character")
         return render_template('/view_item.html', data=get_char_name(CharacterFirstName, CharacterSecondName))
     elif "Back" in request.form:
         pass
