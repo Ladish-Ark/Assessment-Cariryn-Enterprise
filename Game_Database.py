@@ -5,7 +5,7 @@ import re
 app = Flask(__name__, static_url_path='/static')
 
 gamedb = mysql.connector.connect(user='callum', password='GT67phn@',
-                              host='192.168.0.34', database='game',
+                              host='127.0.0.1', database='game',
                               auth_plugin='mysql_native_password')
 
 
@@ -50,6 +50,11 @@ def character():
       Resolve = details['Resolve']
       Life = details['Life']
 
+      cur = gamedb.cursor()
+      #cur.execute("INSERT INTO player_charaters(first_name, last_name, raceID_FK1, classID_FK1, alignmentID_FK1, level, strength, brawn, agility, mettle, craft, insight, wits, resolve, life, armourID_FK1, protectionID_FK1) VALUES (%)", (Type here)
+      gamedb.commit()
+      cur.close()
+
 
           #cur = gamedb.cursor()
           # Need to finish line 
@@ -80,6 +85,16 @@ def item_charpick():
             print("No Data For Selected Character")
         return render_template('/view_item.html', data=get_char_name(CharacterFirstName, CharacterSecondName))
     elif "Back" in request.form:
+        pass
+    return render_template('/index.html')
+
+@app.route('/add_item.html', methods=['GET', 'POST'])
+def add_items():
+    if "inventory" in request.form:
+        return render_template('/add_item_character.html')
+    elif "database" in request.form:
+        return render_template('/add_item_database.html')
+    elif "exit" in request.form:
         pass
     return render_template('/index.html')
 
