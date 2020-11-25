@@ -127,9 +127,8 @@ def add_item_char():
         cleanstring = item.strip()
         print(cleanstring)
         
-        print(cleanstring)
         cur = gamedb.cursor()
-        itemid = ("SELECT itemID FROM items where items.name='" + cleanstring + "'")
+        itemid = ('SELECT itemID FROM items where items.name="' + cleanstring + '"')
         cur.execute(itemid)
         itemid = cur.fetchall()
 
@@ -139,8 +138,7 @@ def add_item_char():
         # Final Commit Addition Of Item To Specified Player Inventory
 
         cur = gamedb.cursor()
-        add_item = ("INSERT INTO inventory(playerID_FK1, itemID_FK2) VALUES (%s, %s)", (temp_charid, temp_itemid))
-        cur.execute(add_item)
+        cur.execute = ("INSERT INTO inventory(playerID_FK1, itemID_FK2) VALUES (%s, %s)", (temp_charid, temp_itemid))
         gamedb.commit()
         cur.close()
 
