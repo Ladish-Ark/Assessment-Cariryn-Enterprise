@@ -5,7 +5,7 @@ import re
 app = Flask(__name__, static_url_path='/static')
 
 gamedb = mysql.connector.connect(user='callum', password='GT67phn@',
-                              host='127.0.0.1', database='game',
+                              host='192.168.0.34', database='game',
                               auth_plugin='mysql_native_password')
 
 
@@ -91,9 +91,78 @@ def item_charpick():
 @app.route('/add_item.html', methods=['GET', 'POST'])
 def add_items():
     if "inventory" in request.form:
-        return render_template('/add_item_character.html')
+        return render_template('/add_item_character.html', data=view_char_items(), data1=view_items())
     elif "database" in request.form:
         return render_template('/add_item_database.html')
+    elif "exit" in request.form:
+        pass
+    return render_template('/index.html')
+
+@app.route('/add_item_character.html', methods=['GET', 'POST'])
+def add_item_char():
+    if "add" in request.form:
+        details = request.form
+
+        # Get PlayerID 
+        Char = details['Character']
+
+        char = Char.split(" ")
+        first_char = char[0]
+        surname_char = char[1]
+
+        print(first_char)
+        print(surname_char)
+        cur = gamedb.cursor()
+        characterid = ("SELECT playerID FROM player_characters where player_characters.first_name='" + first_char + "' and player_characters.last_name='" + surname_char + "'")
+        cur.execute(characterid)
+        characterid = cur.fetchall()
+        print(characterid)
+
+        temp_charid = re.sub(r'[\[\]\(\), ]', '', str(characterid))
+        print(temp_charid)
+
+        # Get ItemID
+        item = details['items']
+
+        cleanstring = item.strip()
+        print(cleanstring)
+        
+        print(cleanstring)
+        cur = gamedb.cursor()
+        itemid = ("SELECT itemID FROM items where items.name='" + cleanstring + "'")
+        cur.execute(itemid)
+        itemid = cur.fetchall()
+
+        temp_itemid = re.sub(r'[\[\]\(\), ]', '', str(itemid))
+        print(temp_itemid)
+
+        # Final Commit Addition Of Item To Specified Player Inventory
+
+        cur = gamedb.cursor()
+        add_item = ("INSERT INTO inventory(playerID_FK1, itemID_FK2) VALUES (%s, %s)", (temp_charid, temp_itemid))
+        cur.execute(add_item)
+        gamedb.commit()
+        cur.close()
+
+    elif "exit" in request.form:
+        pass
+    return render_template('/index.html')
+
+@app.route('/add_item_database.html', methods=['GET', 'POST'])
+def add_item_data():
+    if "add" in request.form:
+        details = request.form
+
+        name = details['item_name']
+        cost = details['item_cost']
+        load = details['item_load']
+
+        cur = gamedb.cursor()
+        submit_database = ("INSERT INTO items(name, cost, item_load) VALUES (%s, %s)", (name, cost, load))
+        cur.execute(submit_database)
+        gamedb.commit()
+        cur.close()
+
     elif "exit" in request.form:
         pass
     return render_template('/index.html')
@@ -124,7 +193,9 @@ def get_char_name(first_num, second_num):
 
 def view_items():
     cur = gamedb.cursor()
-    cur.execute("SELECT itemID_FK2 FROM inventory")
+    cur.execute("SELECT name FROM items")
+    data = cur.fetchall()
+    return data
 
 
 def viewchar():
@@ -162,6 +233,7 @@ def character_edit_alignment():
     cur.execute('SELECT type FROM alignment')
     data = cur.fetchall()
     return data
+
 
 if __name__ == '__main__':
     app.run(debug=True)

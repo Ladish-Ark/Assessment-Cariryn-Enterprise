@@ -9,7 +9,7 @@
         </style>
 
     <BODY bgcolor="white">
-    <form method="POST" action="/">
+    <form method="POST" action="/add_item_character.html">
         <center>
         
         <img src="static/style/add_items.png" alt="Add a Item" width="300" height="90"><br><br>
@@ -23,12 +23,12 @@
 
         <label for="items">Select Item:</label>
         <select id="items" name="items">
-            {% for item in data %}
+            {% for item in data1 %}
             <option value="{{ item[0] }} {{item[1]}}">{{item[0]}} {{item[1]}}</option>
             {% endfor %}
         </select><br><br>
 
-        <input type = "submit" name="Add" value="Add Item"><br><br><br>
+        <input type = "submit" name="add" value="Add Item"><br><br><br>
         <input type = "submit" name="exit" value="Back">
 
 		</center>

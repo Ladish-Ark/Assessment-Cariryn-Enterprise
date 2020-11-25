@@ -1,0 +1,27 @@
+<HTML>
+    <style>
+        table, th, td {
+        border: 1px solid black;
+        }
+        th {
+        text-align: left;
+        }
+        </style>
+
+    <BODY bgcolor="white">
+    <form method="POST" action="/add_item_database.html">
+        <center>
+        
+        <img src="static/style/add_items.png" alt="Add a Item" width="300" height="90"><br><br>
+
+        Name Of Item: <input type = "text" name="item_name" /><br>
+        Cost: <input type = "number" name="item_cost" min="0" /><br>
+        Load: <input type = "number" name="item_load" min="0" /><br><br><br>
+
+        <input type = "submit" name="add" value="Add Item"><br><br><br>
+        <input type = "submit" name="exit" value="Back">
+
+		</center>
+    </form>
+    </BODY>
+    </HTML>
