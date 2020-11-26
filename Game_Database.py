@@ -21,7 +21,7 @@ def index():
     elif "characteroptions" in request.form:
         return render_template('/character_edit.html', data=character_edit_race(), data1=character_edit_class(), data2=character_edit_alignment(), data3=character_edit_armour(), data4=character_edit_protection())
     elif "additems" in request.form:
-        return render_template('/add_item.html') 
+        return render_template('/item.html') 
     elif "addencounters" in request.form:
         return render_template('/.html') 
     else:
@@ -29,35 +29,93 @@ def index():
 
 
 @app.route('/character_edit.html', methods=['GET', 'POST'])
-def character():  
-  if "submit" in request.form:
-      details = request.form
-      FirstName = details['FirstName']
-      Surname = details['Surname']
+def character():
+    if "submit" in request.form:
+        details = request.form
 
-      ### Get details from drop down boxes
+        FirstName = details['FirstName']
+        Surname = details['Surname']
 
-      ## Selected RaceID
+        ###########################################################################
+        #                     Get details from drop down boxes                    #
+        ###########################################################################
+
+        ## Selected RaceID
+        race = details['race_pick']
+
+        cur = gamedb.cursor()
+        cur.execute('SELECT raceID FROM race WHERE race.name="' + race + '"')
+        raceid = cur.fetchall()
+
+        temp_raceid = re.sub(r'[\[\]\(\), ]', '', str(raceid))
+        print(temp_raceid)
+        
+
+        ## Selected ClassID
+        class_name = details['class_pick']
+
+        cur = gamedb.cursor()
+        cur.execute('SELECT classID FROM classes WHERE classes.classes="' + class_name + '"')
+        classid = cur.fetchall()
+
+        temp_classid = re.sub(r'[\[\]\(\), ]', '', str(classid))
+        print(temp_classid)
 
 
+        ## Selected Alignment
+        alignment = details['alignment_pick']
 
-      Level = details['Level']
-      Strength = details['Strength']
-      Brawn = details['Brawn']
-      Agility = details['Agility']
-      Mettle = details['Mettle']
-      Craft = details['Craft']
-      Insight = details['Insight']
-      Wits = details['Wits']
-      Resolve = details['Resolve']
-      Life = details['Life']
+        cur = gamedb.cursor()
+        cur.execute('SELECT alignmentID FROM alignment WHERE alignment.type="' + alignment + '"')
+        alignmentid = cur.fetchall()
 
-      cur = gamedb.cursor()
-      sql = ("INSERT INTO player_charaters(first_name, last_name, raceID_FK1, classID_FK1, alignmentID_FK1, level, strength, brawn, agility, mettle, craft, insight, wits, resolve, life, armourID_FK1, protectionID_FK1) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
-      val =  (FirstName, Surname, )
-      #cur.execute(sql, val)
-      gamedb.commit()
-      cur.close()
+        temp_alignmentid = re.sub(r'[\[\]\(\), ]', '', str(alignmentid))
+        print(temp_alignmentid)
+
+
+        ## Selected Armour
+        armour = details['armour_pick']
+
+        cur = gamedb.cursor()
+        cur.execute('SELECT armourID FROM armour WHERE armour.name="' + armour + '"')
+        armourid = cur.fetchall()
+
+        temp_armourid = re.sub(r'[\[\]\(\), ]', '', str(armourid))
+        print(temp_armourid)
+
+
+        ## Selected Protection
+        protection = details['protection_pick']
+
+        cur = gamedb.cursor()
+        cur.execute('SELECT protectionID FROM protection WHERE protection.name="' + protection + '"')
+        protectionid = cur.fetchall()
+
+        temp_protectionid = re.sub(r'[\[\]\(\), ]', '', str(protectionid))
+        print(temp_protectionid)
+
+        ###########################################################################
+        #                                   END                                   #
+        ###########################################################################
+
+
+        Level = details['Level']
+        Strength = details['Strength']
+        Brawn = details['Brawn']
+        Agility = details['Agility']
+        Mettle = details['Mettle']
+        Craft = details['Craft']
+        Insight = details['Insight']
+        Wits = details['Wits']
+        Resolve = details['Resolve']
+        Life = details['Life']
+
+        cur = gamedb.cursor()
+        sql = ("INSERT INTO player_characters(first_name, last_name, raceID_FK1, classID_FK1, alignmentID_FK1, level, strength, brawn, agility, mettle, craft, insight, wits, resolve, life, armourID_FK1, protectionID_FK1) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
+        val =  (FirstName, Surname, temp_raceid, temp_classid, temp_alignmentid, Level, Strength, Brawn, Agility, Mettle, Craft, Insight, Wits, Resolve, Life, temp_armourid, temp_protectionid)
+        cur.execute(sql, val)
+        gamedb.commit()
+        cur.close()
 
 
           #cur = gamedb.cursor()
@@ -66,9 +124,9 @@ def character():
           #gamedb.commit()
           #cur.close()
           
-  elif "cancel" in request.form:
+    elif "cancel" in request.form:
         pass
-  return render_template('/index.html')
+    return render_template('/index.html')
 
 @app.route('/view_item_charpick.html', methods=['GET', 'POST'])
 def item_charpick():
