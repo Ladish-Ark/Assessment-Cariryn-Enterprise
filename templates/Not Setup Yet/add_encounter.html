@@ -1,0 +1,51 @@
+<HTML>
+    <style>
+        table, th, td {
+        border: 1px solid black;
+        }
+        th {
+        text-align: left;
+        }
+        </style>
+
+    <BODY bgcolor="white">
+    <form method="POST" action="/add_item_character.html">
+        <center>
+        
+        <img src="static/style/add_encounter.png" alt="Add a Item" width="300" height="90"><br><br>
+
+        <label for="Character">Select Location:</label>
+        <select id="Character" name="Character">
+            {% for item in data %}
+            <option value="{{ item[0] }} {{item[1]}}">{{item[0]}} {{item[1]}}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <label for="items">Select NPC:</label>
+        <select id="items" name="items">
+            {% for item in data1 %}
+            <option value="{{ item[0] }} {{item[1]}}">{{item[0]}} {{item[1]}}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <label for="items">Select Enemies:</label>
+        <select id="items" name="items">
+            {% for item in data2 %}
+            <option value="{{ item[0] }} {{item[1]}}">{{item[0]}} {{item[1]}}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <label for="items">Select Item:</label>
+        <select id="items" name="items">
+            {% for item in data3 %}
+            <option value="{{ item[0] }} {{item[1]}}">{{item[0]}} {{item[1]}}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <input type = "submit" name="add" value="Add Encounter"><br><br><br>
+        <input type = "submit" name="exit" value="Back">
+
+		</center>
+    </form>
+    </BODY>
+    </HTML>

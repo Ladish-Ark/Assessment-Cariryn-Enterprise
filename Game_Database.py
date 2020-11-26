@@ -4,7 +4,7 @@ import re
 
 app = Flask(__name__, static_url_path='/static')
 
-gamedb = mysql.connector.connect(user='callum', password='GT67phn@',
+gamedb = mysql.connector.connect(user='snazzylaces', password='GT67phn@',
                               host='192.168.0.34', database='game',
                               auth_plugin='mysql_native_password')
 
@@ -28,15 +28,17 @@ def index():
         return render_template('/index.html')
 
 
-@app.route('/character_edit', methods=['GET', 'POST'])
+@app.route('/character_edit.html', methods=['GET', 'POST'])
 def character():  
   if "submit" in request.form:
       details = request.form
       FirstName = details['FirstName']
       Surname = details['Surname']
-      Age = details['Age']
 
       ### Get details from drop down boxes
+
+      ## Selected RaceID
+
 
 
       Level = details['Level']
@@ -51,7 +53,9 @@ def character():
       Life = details['Life']
 
       cur = gamedb.cursor()
-      #cur.execute("INSERT INTO player_charaters(first_name, last_name, raceID_FK1, classID_FK1, alignmentID_FK1, level, strength, brawn, agility, mettle, craft, insight, wits, resolve, life, armourID_FK1, protectionID_FK1) VALUES (%)", (Type here)
+      sql = ("INSERT INTO player_charaters(first_name, last_name, raceID_FK1, classID_FK1, alignmentID_FK1, level, strength, brawn, agility, mettle, craft, insight, wits, resolve, life, armourID_FK1, protectionID_FK1) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
+      val =  (FirstName, Surname, )
+      #cur.execute(sql, val)
       gamedb.commit()
       cur.close()
 
@@ -88,10 +92,12 @@ def item_charpick():
         pass
     return render_template('/index.html')
 
-@app.route('/add_item.html', methods=['GET', 'POST'])
+@app.route('/item.html', methods=['GET', 'POST'])
 def add_items():
     if "inventory" in request.form:
         return render_template('/add_item_character.html', data=view_char_items(), data1=view_items())
+    elif "inv_remove" in request.form:
+        return render_template('/remove_item.html')
     elif "database" in request.form:
         return render_template('/add_item_database.html')
     elif "exit" in request.form:
@@ -138,7 +144,9 @@ def add_item_char():
         # Final Commit Addition Of Item To Specified Player Inventory
 
         cur = gamedb.cursor()
-        cur.execute = ("INSERT INTO inventory(playerID_FK1, itemID_FK2) VALUES (%s, %s)", (temp_charid, temp_itemid))
+        sql = ("INSERT INTO inventory(playerID_FK1, itemID_FK2) VALUES (%s, %s)")
+        val = (temp_charid, temp_itemid)
+        cur.execute(sql, val)
         gamedb.commit()
         cur.close()
 
@@ -156,8 +164,9 @@ def add_item_data():
         load = details['item_load']
 
         cur = gamedb.cursor()
-        submit_database = ("INSERT INTO items(name, cost, item_load) VALUES (%s, %s)", (name, cost, load))
-        cur.execute(submit_database)
+        sql = ("INSERT INTO items(name, cost, item_load) VALUES (%s, %s, %s)")
+        val = (name, cost, load)
+        cur.execute(sql, val)
         gamedb.commit()
         cur.close()
 
