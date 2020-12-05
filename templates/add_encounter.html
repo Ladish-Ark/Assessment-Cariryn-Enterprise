@@ -9,36 +9,36 @@
         </style>
 
     <BODY bgcolor="white">
-    <form method="POST" action="/add_item_character.html">
+    <form method="POST" action="/add_encounter.html">
         <center>
         
         <img src="static/style/add_encounter.png" alt="Add a Item" width="300" height="90"><br><br>
 
-        <label for="Character">Select Location:</label>
-        <select id="Character" name="Character">
+        <label for="Location">Select Location:</label>
+        <select id="Location" name="Location">
             {% for item in data %}
-            <option value="{{ item[0] }} {{item[1]}}">{{item[0]}} {{item[1]}}</option>
+            <option value="{{ item[0] }}">{{item[0]}}</option>
             {% endfor %}
         </select><br><br>
 
-        <label for="items">Select NPC:</label>
-        <select id="items" name="items">
+        <label for="NPC">Select NPC:</label>
+        <select id="NPC" name="NPC">
             {% for item in data1 %}
-            <option value="{{ item[0] }} {{item[1]}}">{{item[0]}} {{item[1]}}</option>
+            <option value="{{ item[0] }}">{{item[0]}}</option>
             {% endfor %}
         </select><br><br>
 
-        <label for="items">Select Enemies:</label>
-        <select id="items" name="items">
+        <label for="Enemies">Select Enemies:</label>
+        <select id="Enemies" name="Enemies">
             {% for item in data2 %}
-            <option value="{{ item[0] }} {{item[1]}}">{{item[0]}} {{item[1]}}</option>
+            <option value="{{ item[0] }}">{{item[0]}}</option>
             {% endfor %}
         </select><br><br>
 
-        <label for="items">Select Item:</label>
-        <select id="items" name="items">
+        <label for="item">Select Item:</label>
+        <select id="item" name="item">
             {% for item in data3 %}
-            <option value="{{ item[0] }} {{item[1]}}">{{item[0]}} {{item[1]}}</option>
+            <option value="{{ item[0] }}">{{item[0]}}</option>
             {% endfor %}
         </select><br><br>
 
