@@ -132,6 +132,7 @@ def item_charpick():
         CharacterFirstName = Character_Details[0]
         CharacterSecondName = Character_Details[1]
         character = get_char_name(CharacterFirstName, CharacterSecondName)
+        load = total_load(CharacterFirstName, CharacterSecondName)
         #character2 = get_char_name(CharacterSecondName)
         print(CharacterFirstName)
         print(CharacterSecondName)
@@ -140,7 +141,7 @@ def item_charpick():
             int_nameID = str(int_nameID[0])
         except IndexError:
             print("No Data For Selected Character")
-        return render_template('/view_item.html', data=get_char_name(CharacterFirstName, CharacterSecondName), data1=total_load(code))
+        return render_template('/view_item.html', data=get_char_name(CharacterFirstName, CharacterSecondName), data1=total_load(CharacterFirstName, CharacterSecondName))
     elif "viewallitems" in request.form:
         return render_template('/view_all_items.html', data=items_most_expensive_first())
     elif "Back" in request.form:
@@ -397,21 +398,37 @@ def get_char_name(first_num, second_num):
     code = cur.fetchall()
 
     temp = re.sub(r'[\[\]\(\), ]', '', str(code))
-    print(temp)
+    #print(temp)
 
-    total_load(temp)
+    #total_load(temp)
 
     get_items = ("SELECT name, cost, item_load FROM inventory, items WHERE inventory.playerID_FK1='" + temp + "' and inventory.itemID_FK2=items.itemID") 
     cur.execute(get_items)
     data = cur.fetchall()
-    print(data)
     return data
 
-def total_load(temp):
+def total_load(first_num, second_num):
     cur = gamedb.cursor()
-    cur.execute('SELECT item_load FROM items, inventory WHERE inventory.playerID_FK1="' + temp + '" AND inventory.itemID_FK2=items.itemID')
+    check = ("SELECT playerID FROM player_characters where player_characters.first_name='" + first_num + "' and player_characters.last_name='" + second_num +"'")
+    cur.execute(check)
+    code = cur.fetchall()
+
+    temp = re.sub(r'[\[\]\(\), ]', '', str(code))
+
+    #total_load(temp)
+
+    get_items = ("SELECT name, cost, item_load FROM inventory, items WHERE inventory.playerID_FK1='" + temp + "' and inventory.itemID_FK2=items.itemID") 
+    cur.execute(get_items)
     data = cur.fetchall()
-    return data
+
+    total_load = 0
+    for i in range(len(data)):
+        load = int(data[i][2])
+        try:
+            total_load += load
+        except TypeError:
+            print('Type Error')
+    return total_load
 
 def view_items():
     cur = gamedb.cursor()
