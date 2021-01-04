@@ -14,12 +14,12 @@
         
         <img src="static/style/add_items.png" alt="Add a Item" width="300" height="90"><br><br>
 
-        Name Of Item: <input type = "text" name="item_name" /><br>
-        Cost: <input type = "number" name="item_cost" min="0" /><br>
-        Load: <input type = "number" name="item_load" min="0" /><br><br><br>
+        Name Of Item: <input type = "text" name="item_name" required/><br>
+        Cost: <input type = "number" name="item_cost" min="0" required/><br>
+        Load: <input type = "number" name="item_load" min="0" required/><br><br><br>
 
         <input type = "submit" name="add" value="Add Item"><br><br><br>
-        <input type = "submit" name="exit" value="Back">
+        <input type = "submit" name="exit" value="Back" formnovalidate>
 
 		</center>
     </form>

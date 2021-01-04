@@ -7,8 +7,8 @@
 
         <H2>Main Details</H2>
 
-        First Name: <input type = "text" name= "FirstName" /> <br>
-        Surname: <input type = "text" name= "Surname" /> <br>
+        First Name: <input type = "text" name= "FirstName" required/> <br>
+        Surname: <input type = "text" name= "Surname" required/> <br>
         
         <label for="race_pick">Select Your Race:</label>
         <select id="race_pick" name="race_pick">
@@ -47,21 +47,21 @@
 
         <H2>Stats</H2>
 
-        Level: <input type = "number" name = "Level" min="1" /> <br>
-        Strength: <input type = "number" name = "Strength" min="1" max ="6" /> <br>
-        Brawn: <input type = "number" name = "Brawn" min="1" max="6" /> <br>
-        Agility: <input type = "number" name = "Agility" min="1" max="6" /> <br>
-        Mettle: <input type = "number" name = "Mettle" min="1" max="6" /> <br>
-        Craft: <input type = "number" name = "Craft" min="1" max="6" /> <br>
-        Insight <input type = "number" name = "Insight" min="1" max="6" /> <br>
-        Wits: <input type = "number" name = "Wits" min="1" max="6" /> <br>
-        Resolve: <input type = "number" name = "Resolve" min="1" max="6" /> <br>
-        Life: <input type = "number" name = "Life" min="1" max="50" /> <br>
+        Level: <input type = "number" name = "Level" min="1" required/> <br>
+        Strength: <input type = "number" name = "Strength" min="1" max ="6" required/> <br>
+        Brawn: <input type = "number" name = "Brawn" min="1" max="6" required/> <br>
+        Agility: <input type = "number" name = "Agility" min="1" max="6" required/> <br>
+        Mettle: <input type = "number" name = "Mettle" min="1" max="6" required/> <br>
+        Craft: <input type = "number" name = "Craft" min="1" max="6" required/> <br>
+        Insight <input type = "number" name = "Insight" min="1" max="6" required/> <br>
+        Wits: <input type = "number" name = "Wits" min="1" max="6" required/> <br>
+        Resolve: <input type = "number" name = "Resolve" min="1" max="6" required/> <br>
+        Life: <input type = "number" name = "Life" min="1" max="50" required/> <br>
         
         </br>
         
         <input type = "submit" name="submit" value="Add Character"><br>
-        <input type = "submit" name="cancel" value="Cancel">
+        <input type = "submit" name="cancel" value="Cancel" formnovalidate>
         
         
 		</center>

@@ -2,10 +2,12 @@ from flask import Flask, render_template, request
 import mysql.connector
 import re
 
+global temp_playerid
+
 app = Flask(__name__, static_url_path='/static')
 
 gamedb = mysql.connector.connect(user='snazzylaces', password='GT67phn@',
-                              host='192.168.0.34', database='game',
+                              host='192.168.0.23', database='game',
                               auth_plugin='mysql_native_password')
 
 
@@ -50,8 +52,6 @@ def character():
         raceid = cur.fetchall()
 
         temp_raceid = re.sub(r'[\[\]\(\), ]', '', str(raceid))
-        print(temp_raceid)
-        
 
         ## Selected ClassID
         class_name = details['class_pick']
@@ -61,8 +61,6 @@ def character():
         classid = cur.fetchall()
 
         temp_classid = re.sub(r'[\[\]\(\), ]', '', str(classid))
-        print(temp_classid)
-
 
         ## Selected Alignment
         alignment = details['alignment_pick']
@@ -72,8 +70,6 @@ def character():
         alignmentid = cur.fetchall()
 
         temp_alignmentid = re.sub(r'[\[\]\(\), ]', '', str(alignmentid))
-        print(temp_alignmentid)
-
 
         ## Selected Armour
         armour = details['armour_pick']
@@ -83,8 +79,6 @@ def character():
         armourid = cur.fetchall()
 
         temp_armourid = re.sub(r'[\[\]\(\), ]', '', str(armourid))
-        print(temp_armourid)
-
 
         ## Selected Protection
         protection = details['protection_pick']
@@ -94,7 +88,6 @@ def character():
         protectionid = cur.fetchall()
 
         temp_protectionid = re.sub(r'[\[\]\(\), ]', '', str(protectionid))
-        print(temp_protectionid)
 
         ###########################################################################
         #                                   END                                   #
@@ -134,8 +127,7 @@ def item_charpick():
         character = get_char_name(CharacterFirstName, CharacterSecondName)
         load = total_load(CharacterFirstName, CharacterSecondName)
         #character2 = get_char_name(CharacterSecondName)
-        print(CharacterFirstName)
-        print(CharacterSecondName)
+
         try:
             int_nameID = character[0]
             int_nameID = str(int_nameID[0])
@@ -157,7 +149,7 @@ def view_all_items():
 @app.route('/item.html', methods=['GET', 'POST'])
 def add_items():
     if "inventory" in request.form:
-        return render_template('/add_item_character.html', data=view_char_items(), data1=view_items())
+        return render_template('/add_item_character.html', data=view_char_items(), data1=view_min_items())
     elif "inv_remove" in request.form:
         return render_template('/remove_item_char.html', data=view_char_items())
     elif "database" in request.form:
@@ -178,22 +170,17 @@ def add_item_char():
         first_char = char[0]
         surname_char = char[1]
 
-        print(first_char)
-        print(surname_char)
         cur = gamedb.cursor()
         characterid = ("SELECT playerID FROM player_characters where player_characters.first_name='" + first_char + "' and player_characters.last_name='" + surname_char + "'")
         cur.execute(characterid)
         characterid = cur.fetchall()
-        print(characterid)
 
         temp_charid = re.sub(r'[\[\]\(\), ]', '', str(characterid))
-        print(temp_charid)
 
         # Get ItemID
         item = details['items']
 
         cleanstring = item.strip()
-        print(cleanstring)
         
         cur = gamedb.cursor()
         itemid = ('SELECT itemID FROM items where items.name="' + cleanstring + '"')
@@ -201,7 +188,6 @@ def add_item_char():
         itemid = cur.fetchall()
 
         temp_itemid = re.sub(r'[\[\]\(\), ]', '', str(itemid))
-        print(temp_itemid)
 
         # Final Commit Addition Of Item To Specified Player Inventory
 
@@ -297,51 +283,61 @@ def add_encounter():
         pass
     return render_template('/index.html')
 
-##################################################################################################################################################### HELP HELP HELP HELP HELP 
-
 @app.route('/remove_item_char.html', methods=['GET', 'POST'])
 def rem_item_char():
     if "next" in request.form:
-        return render_template('/remove_item_item.html', data=remove_item_list())  
+        return render_template('/remove_item_item.html', data=remove_item_char()[0])
     elif "Back" in request.form:
         pass
     return render_template('/index.html')
 
-def remove_item_list():
+@app.route('/remove_item_item.html', methods=['GET', 'POST'])
+def rem_item_item():
+    if "remove" in request.form:
+        print("===============================================================================")
+        details = request.form
+
+        item = details['rem_item']
+        print(item)
+        print(temp_playerid)
+
+        cur = gamedb.cursor()
+        cur.execute('SELECT itemID FROM items WHERE items.name="' + item + '"')
+        itemids = cur.fetchall()
+
+        temp_itemid = re.sub(r'[\[\]\(\), ]', '', str(itemids))
+
+        cur = gamedb.cursor()
+        cur.execute('DELETE FROM inventory WHERE inventory.playerID_FK1="' + temp_playerid + '" AND inventory.itemID_FK2="' + temp_itemid + '" LIMIT 1')
+        gamedb.commit()
+
+    elif "Back" in request.form:
+        pass
+    return render_template('/index.html')
+
+def remove_item_char():
+    global temp_playerid
+
     details = request.form
 
     character = details['char_rem_item']
-    print(character)
 
     character = character.split(" ")
     first_char = character[0]
     surname_char = character[1]
-
-    print(first_char)
-    print(surname_char)
 
     cur = gamedb.cursor()
     cur.execute("SELECT playerID FROM player_characters WHERE player_characters.first_name='" + first_char + "' AND player_characters.last_name='" + surname_char + "'")
     player = cur.fetchall()
 
     temp_playerid = re.sub(r'[\[\]\(\), ]', '', str(player))
-    print(temp_playerid)
 
     cur = gamedb.cursor()
-    cur.execute("SELECT itemID_FK2 FROM inventory WHERE inventory.playerID_FK1='" + temp_playerid + "'")
-    item = cur.fetchall()
-
-    print(len(item))
-    print(item[0])
-
-    temp_itemid = re.sub(r'[\[\]\(\), ]', '', str(item))
-
-    cur = gamedb.cursor()
-    cur.execute("SELECT name FROM items WHERE items.itemID='" + temp_itemid + "'")
+    get_items = ("SELECT name FROM inventory, items WHERE inventory.playerID_FK1='" + temp_playerid + "' and inventory.itemID_FK2=items.itemID") 
+    cur.execute(get_items)
     data = cur.fetchall()
-    return data
 
-################################################################################################################################################################################################################################################
+    return data, temp_playerid
 
 def view_locations():
     cur = gamedb.cursor()
@@ -375,13 +371,13 @@ def giant_spider():
 
 def items_most_expensive_first():
     cur = gamedb.cursor()
-    cur.execute('SELECT name, cost, item_load FROM items ORDER BY cost DESC')
+    cur.execute('SELECT name, cost, item_load FROM items WHERE itemID <> 0 ORDER BY cost DESC')
     data = cur.fetchall()
     return data
 
 def view_npc():
     cur = gamedb.cursor()
-    cur.execute('SELECT name, Life FROM non_player_characters')
+    cur.execute('SELECT name, Life FROM non_player_characters WHERE npcID <> 0')
     data = cur.fetchall()
     return data
 
@@ -398,7 +394,6 @@ def get_char_name(first_num, second_num):
     code = cur.fetchall()
 
     temp = re.sub(r'[\[\]\(\), ]', '', str(code))
-    #print(temp)
 
     #total_load(temp)
 
@@ -436,6 +431,11 @@ def view_items():
     data = cur.fetchall()
     return data
 
+def view_min_items():
+    cur = gamedb.cursor()
+    cur.execute("SELECT name FROM items WHERE itemID <> 0")
+    data = cur.fetchall()
+    return data
 
 def viewchar():
     cur = gamedb.cursor()
@@ -475,5 +475,5 @@ def character_edit_alignment():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')
     #app.run()
