@@ -1,12 +1,14 @@
 from flask import Flask, render_template, request
 import mysql.connector
 import re
+import os
+import time
 
 global temp_playerid
 
 app = Flask(__name__, static_url_path='/static')
 
-gamedb = mysql.connector.connect(user='snazzylaces', password='GT67phn@',
+gamedb = mysql.connector.connect(user=os.environ.get('DB_USER'), password=os.environ.get('DB_PASS'),
                               host='192.168.0.23', database='game',
                               auth_plugin='mysql_native_password')
 
@@ -37,80 +39,84 @@ def character():
     if "submit" in request.form:
         details = request.form
 
-        FirstName = details['FirstName']
-        Surname = details['Surname']
+        try:
+            FirstName = details['FirstName']
+            Surname = details['Surname']
 
-        ###########################################################################
-        #                     Get details from drop down boxes                    #
-        ###########################################################################
+            ###########################################################################
+            #                     Get details from drop down boxes                    #
+            ###########################################################################
 
-        ## Selected RaceID
-        race = details['race_pick']
+            ## Selected RaceID
+            race = details['race_pick']
 
-        cur = gamedb.cursor()
-        cur.execute('SELECT raceID FROM race WHERE race.name="' + race + '"')
-        raceid = cur.fetchall()
+            cur = gamedb.cursor()
+            cur.execute('SELECT raceID FROM race WHERE race.name="' + race + '"')
+            raceid = cur.fetchall()
 
-        temp_raceid = re.sub(r'[\[\]\(\), ]', '', str(raceid))
+            temp_raceid = re.sub(r'[\[\]\(\), ]', '', str(raceid))
 
-        ## Selected ClassID
-        class_name = details['class_pick']
+            ## Selected ClassID
+            class_name = details['class_pick']
 
-        cur = gamedb.cursor()
-        cur.execute('SELECT classID FROM classes WHERE classes.classes="' + class_name + '"')
-        classid = cur.fetchall()
+            cur = gamedb.cursor()
+            cur.execute('SELECT classID FROM classes WHERE classes.classes="' + class_name + '"')
+            classid = cur.fetchall()
 
-        temp_classid = re.sub(r'[\[\]\(\), ]', '', str(classid))
+            temp_classid = re.sub(r'[\[\]\(\), ]', '', str(classid))
 
-        ## Selected Alignment
-        alignment = details['alignment_pick']
+            ## Selected Alignment
+            alignment = details['alignment_pick']
 
-        cur = gamedb.cursor()
-        cur.execute('SELECT alignmentID FROM alignment WHERE alignment.type="' + alignment + '"')
-        alignmentid = cur.fetchall()
+            cur = gamedb.cursor()
+            cur.execute('SELECT alignmentID FROM alignment WHERE alignment.type="' + alignment + '"')
+            alignmentid = cur.fetchall()
 
-        temp_alignmentid = re.sub(r'[\[\]\(\), ]', '', str(alignmentid))
+            temp_alignmentid = re.sub(r'[\[\]\(\), ]', '', str(alignmentid))
 
-        ## Selected Armour
-        armour = details['armour_pick']
+            ## Selected Armour
+            armour = details['armour_pick']
 
-        cur = gamedb.cursor()
-        cur.execute('SELECT armourID FROM armour WHERE armour.name="' + armour + '"')
-        armourid = cur.fetchall()
+            cur = gamedb.cursor()
+            cur.execute('SELECT armourID FROM armour WHERE armour.name="' + armour + '"')
+            armourid = cur.fetchall()
 
-        temp_armourid = re.sub(r'[\[\]\(\), ]', '', str(armourid))
+            temp_armourid = re.sub(r'[\[\]\(\), ]', '', str(armourid))
 
-        ## Selected Protection
-        protection = details['protection_pick']
+            ## Selected Protection
+            protection = details['protection_pick']
 
-        cur = gamedb.cursor()
-        cur.execute('SELECT protectionID FROM protection WHERE protection.name="' + protection + '"')
-        protectionid = cur.fetchall()
+            cur = gamedb.cursor()
+            cur.execute('SELECT protectionID FROM protection WHERE protection.name="' + protection + '"')
+            protectionid = cur.fetchall()
 
-        temp_protectionid = re.sub(r'[\[\]\(\), ]', '', str(protectionid))
+            temp_protectionid = re.sub(r'[\[\]\(\), ]', '', str(protectionid))
 
-        ###########################################################################
-        #                                   END                                   #
-        ###########################################################################
+            ###########################################################################
+            #                                   END                                   #
+            ###########################################################################
 
 
-        Level = details['Level']
-        Strength = details['Strength']
-        Brawn = details['Brawn']
-        Agility = details['Agility']
-        Mettle = details['Mettle']
-        Craft = details['Craft']
-        Insight = details['Insight']
-        Wits = details['Wits']
-        Resolve = details['Resolve']
-        Life = details['Life']
+            Level = details['Level']
+            Strength = details['Strength']
+            Brawn = details['Brawn']
+            Agility = details['Agility']
+            Mettle = details['Mettle']
+            Craft = details['Craft']
+            Insight = details['Insight']
+            Wits = details['Wits']
+            Resolve = details['Resolve']
+            Life = details['Life']
 
-        cur = gamedb.cursor()
-        sql = ("INSERT INTO player_characters(first_name, last_name, raceID_FK1, classID_FK1, alignmentID_FK1, level, strength, brawn, agility, mettle, craft, insight, wits, resolve, life, armourID_FK1, protectionID_FK1) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
-        val =  (FirstName, Surname, temp_raceid, temp_classid, temp_alignmentid, Level, Strength, Brawn, Agility, Mettle, Craft, Insight, Wits, Resolve, Life, temp_armourid, temp_protectionid)
-        cur.execute(sql, val)
-        gamedb.commit()
-        cur.close()
+            cur = gamedb.cursor()
+            sql = ("INSERT INTO player_characters(first_name, last_name, raceID_FK1, classID_FK1, alignmentID_FK1, level, strength, brawn, agility, mettle, craft, insight, wits, resolve, life, armourID_FK1, protectionID_FK1) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
+            val =  (FirstName, Surname, temp_raceid, temp_classid, temp_alignmentid, Level, Strength, Brawn, Agility, Mettle, Craft, Insight, Wits, Resolve, Life, temp_armourid, temp_protectionid)
+            cur.execute(sql, val)
+            gamedb.commit()
+            cur.close()
+            return render_template('/confirm_addition.html')
+        except:
+            return render_template('/confirm_error.html')
           
     elif "cancel" in request.form:
         pass
@@ -163,40 +169,44 @@ def add_item_char():
     if "add" in request.form:
         details = request.form
 
-        # Get PlayerID 
-        Char = details['Character']
+        try:
+            # Get PlayerID 
+            Char = details['Character']
 
-        char = Char.split(" ")
-        first_char = char[0]
-        surname_char = char[1]
+            char = Char.split(" ")
+            first_char = char[0]
+            surname_char = char[1]
 
-        cur = gamedb.cursor()
-        characterid = ("SELECT playerID FROM player_characters where player_characters.first_name='" + first_char + "' and player_characters.last_name='" + surname_char + "'")
-        cur.execute(characterid)
-        characterid = cur.fetchall()
+            cur = gamedb.cursor()
+            characterid = ("SELECT playerID FROM player_characters where player_characters.first_name='" + first_char + "' and player_characters.last_name='" + surname_char + "'")
+            cur.execute(characterid)
+            characterid = cur.fetchall()
 
-        temp_charid = re.sub(r'[\[\]\(\), ]', '', str(characterid))
+            temp_charid = re.sub(r'[\[\]\(\), ]', '', str(characterid))
 
-        # Get ItemID
-        item = details['items']
+            # Get ItemID
+            item = details['items']
 
-        cleanstring = item.strip()
+            cleanstring = item.strip()
         
-        cur = gamedb.cursor()
-        itemid = ('SELECT itemID FROM items where items.name="' + cleanstring + '"')
-        cur.execute(itemid)
-        itemid = cur.fetchall()
+            cur = gamedb.cursor()
+            itemid = ('SELECT itemID FROM items where items.name="' + cleanstring + '"')
+            cur.execute(itemid)
+            itemid = cur.fetchall()
 
-        temp_itemid = re.sub(r'[\[\]\(\), ]', '', str(itemid))
+            temp_itemid = re.sub(r'[\[\]\(\), ]', '', str(itemid))
 
-        # Final Commit Addition Of Item To Specified Player Inventory
-
-        cur = gamedb.cursor()
-        sql = ("INSERT INTO inventory(playerID_FK1, itemID_FK2) VALUES (%s, %s)")
-        val = (temp_charid, temp_itemid)
-        cur.execute(sql, val)
-        gamedb.commit()
-        cur.close()
+            # Final Commit Addition Of Item To Specified Player Inventory
+        
+            cur = gamedb.cursor()
+            sql = ("INSERT INTO inventory(playerID_FK1, itemID_FK2) VALUES (%s, %s)")
+            val = (temp_charid, temp_itemid)
+            cur.execute(sql, val)
+            gamedb.commit()
+            cur.close()
+            return render_template('/confirm_addition.html')
+        except:
+            return render_template('/confirm_error.html')
 
     elif "exit" in request.form:
         pass
@@ -207,16 +217,20 @@ def add_item_data():
     if "add" in request.form:
         details = request.form
 
-        name = details['item_name']
-        cost = details['item_cost']
-        load = details['item_load']
+        try:
+            name = details['item_name']
+            cost = details['item_cost']
+            load = details['item_load']
 
-        cur = gamedb.cursor()
-        sql = ("INSERT INTO items(name, cost, item_load) VALUES (%s, %s, %s)")
-        val = (name, cost, load)
-        cur.execute(sql, val)
-        gamedb.commit()
-        cur.close()
+            cur = gamedb.cursor()
+            sql = ("INSERT INTO items(name, cost, item_load) VALUES (%s, %s, %s)")
+            val = (name, cost, load)
+            cur.execute(sql, val)
+            gamedb.commit()
+            cur.close()
+            return render_template('/confirm_addition.html')
+        except:
+            return render_template('/confirm_error.html')
 
     elif "exit" in request.form:
         pass
@@ -238,46 +252,50 @@ def add_encounter():
 
     if "add" in request.form:
 
-        location = details['Location']
-        npc = details['NPC']
-        enemy = details['Enemies']
-        item = details['item']
+        try:
+            location = details['Location']
+            npc = details['NPC']
+            enemy = details['Enemies']
+            item = details['item']
 
-        ## Location
-        cur = gamedb.cursor()
-        cur.execute('SELECT locationID FROM locations WHERE locations.name="' + location + '"')
-        locationid = cur.fetchall()
+            ## Location
+            cur = gamedb.cursor()
+            cur.execute('SELECT locationID FROM locations WHERE locations.name="' + location + '"')
+            locationid = cur.fetchall()
 
-        temp_locationid = re.sub(r'[\[\]\(\), ]', '', str(locationid))
+            temp_locationid = re.sub(r'[\[\]\(\), ]', '', str(locationid))
 
-        ## NPC
-        cur = gamedb.cursor()
-        cur.execute('SELECT npcID FROM non_player_characters WHERE non_player_characters.name="' + npc + '"')
-        npcid = cur.fetchall()
+            ## NPC
+            cur = gamedb.cursor()
+            cur.execute('SELECT npcID FROM non_player_characters WHERE non_player_characters.name="' + npc + '"')
+            npcid = cur.fetchall()
 
-        temp_npcid = re.sub(r'[\[\]\(\), ]', '', str(npcid))
+            temp_npcid = re.sub(r'[\[\]\(\), ]', '', str(npcid))
 
-        ## Enemy
-        cur = gamedb.cursor()
-        cur.execute('SELECT enemiesID FROM enemies WHERE enemies.name="' + enemy + '"')
-        enemyid = cur.fetchall()
+            ## Enemy
+            cur = gamedb.cursor()
+            cur.execute('SELECT enemiesID FROM enemies WHERE enemies.name="' + enemy + '"')
+            enemyid = cur.fetchall()
 
-        temp_enemyid = re.sub(r'[\[\]\(\), ]', '', str(enemyid))
+            temp_enemyid = re.sub(r'[\[\]\(\), ]', '', str(enemyid))
 
-        ## Item
-        cur = gamedb.cursor()
-        cur.execute('SELECT itemID FROM items WHERE items.name="' + item + '"')
-        itemid = cur.fetchall()
+            ## Item
+            cur = gamedb.cursor()
+            cur.execute('SELECT itemID FROM items WHERE items.name="' + item + '"')
+            itemid = cur.fetchall()
 
-        temp_itemid = re.sub(r'[\[\]\(\), ]', '', str(itemid))
+            temp_itemid = re.sub(r'[\[\]\(\), ]', '', str(itemid))
 
-        ## INSERT INTO DATABASE
-        cur = gamedb.cursor()
-        sql = ('INSERT INTO encounter(locationID_FK1, npcID_FK1, enemiesID_FK1, itemID_FK1) VALUES (%s, %s, %s, %s)')
-        val = (temp_locationid, temp_npcid, temp_enemyid, temp_itemid)
-        cur.execute(sql, val)
-        gamedb.commit()
-        cur.close()
+            ## INSERT INTO DATABASE
+            cur = gamedb.cursor()
+            sql = ('INSERT INTO encounter(locationID_FK1, npcID_FK1, enemiesID_FK1, itemID_FK1) VALUES (%s, %s, %s, %s)')
+            val = (temp_locationid, temp_npcid, temp_enemyid, temp_itemid)
+            cur.execute(sql, val)
+            gamedb.commit()
+            cur.close()
+            return render_template('/confirm_addition.html')
+        except:
+            return render_template('/confirm_error.html')
 
     elif "exit" in request.form:
         pass
@@ -294,26 +312,48 @@ def rem_item_char():
 @app.route('/remove_item_item.html', methods=['GET', 'POST'])
 def rem_item_item():
     if "remove" in request.form:
-        print("===============================================================================")
         details = request.form
 
-        item = details['rem_item']
-        print(item)
-        print(temp_playerid)
+        try:
+            item = details['rem_item']
 
-        cur = gamedb.cursor()
-        cur.execute('SELECT itemID FROM items WHERE items.name="' + item + '"')
-        itemids = cur.fetchall()
+            cur = gamedb.cursor()
+            cur.execute('SELECT itemID FROM items WHERE items.name="' + item + '"')
+            itemids = cur.fetchall()
 
-        temp_itemid = re.sub(r'[\[\]\(\), ]', '', str(itemids))
+            temp_itemid = re.sub(r'[\[\]\(\), ]', '', str(itemids))
 
-        cur = gamedb.cursor()
-        cur.execute('DELETE FROM inventory WHERE inventory.playerID_FK1="' + temp_playerid + '" AND inventory.itemID_FK2="' + temp_itemid + '" LIMIT 1')
-        gamedb.commit()
+            cur = gamedb.cursor()
+            cur.execute('DELETE FROM inventory WHERE inventory.playerID_FK1="' + temp_playerid + '" AND inventory.itemID_FK2="' + temp_itemid + '" LIMIT 1')
+            gamedb.commit()
+            return render_template('/confirm_addition_removal.html')
+        except:
+            return render_template('/confirm_error.html')
 
     elif "Back" in request.form:
         pass
     return render_template('/index.html')
+
+@app.route('/confirm_addition', methods=['GET', 'POST'])
+def conf_add_detail():
+    if request.method == 'POST':
+        return render_template('/index.html')
+    else:
+        return render_template('/404 ERROR.html')
+
+@app.route('/confirm_addition_removal', methods=['GET', 'POST'])
+def conf_rem_detail():
+    if request.method == 'POST':
+        return render_template('/index.html')
+    else:
+        return render_template('/404 ERROR.html')
+
+@app.route('/confirm_error', methods=['GET', 'POST'])
+def conf_error():
+    if request.method == 'POST':
+        return render_template('/index.html')
+    else:
+        return render_template('/404 ERROR.html')
 
 def remove_item_char():
     global temp_playerid
