@@ -1,6 +1,6 @@
 # Assessment-Cariryn-Enterprise
 
-**__By Callum Baldwin__**
+**__By Callum__**
 
 Start Date: 13th October 2020
 End Date: 15th January 2020
